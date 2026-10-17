@@ -70,13 +70,14 @@ $(TARGET): $(OBJS)
 check: $(TARGET)
 	$(PYTHON) tools/check_imports.py $(TARGET) $(W2K_SYSDIR)
 
-# Text files get CRLF line endings for Notepad on Windows 2000.
+# Text files get CRLF line endings for Notepad on Windows 2000. The README's
+# <!-- web --> block (badges, screenshots) only makes sense on GitHub.
 dist: $(TARGET)
 	rm -rf $(BUILD)/dist && mkdir -p $(BUILD)/dist/wmpmeta dist
 	cp $(TARGET) $(BUILD)/dist/wmpmeta/
 	for f in README.md:README.txt LICENSE:LICENSE.txt THIRD_PARTY_NOTICES.txt:THIRD_PARTY_NOTICES.txt \
 	         scripts/install.cmd:install.cmd scripts/uninstall.cmd:uninstall.cmd; do \
-	    $(PYTHON) -c "import sys; d=open(sys.argv[1]).read(); open(sys.argv[2],'w',newline='\r\n').write(d)" \
+	    $(PYTHON) -c "import re,sys; d=open(sys.argv[1]).read(); d=re.sub(r'<!-- web -->.*?<!-- /web -->\n*', '', d, flags=re.S); open(sys.argv[2],'w',newline='\r\n').write(d)" \
 	        $${f%%:*} $(BUILD)/dist/wmpmeta/$${f##*:}; done
 	cp third_party/mbedtls/LICENSE $(BUILD)/dist/wmpmeta/LICENSE-mbedtls.txt
 	cp third_party/cjson/LICENSE $(BUILD)/dist/wmpmeta/LICENSE-cjson.txt
