@@ -8,7 +8,7 @@ Microsoft shut down the metadata service WMP uses, so every audio CD now shows u
 [![build](https://github.com/savaughn/wmpmeta/actions/workflows/build.yml/badge.svg)](https://github.com/savaughn/wmpmeta/actions/workflows/build.yml)
 [![release](https://img.shields.io/github/v/release/savaughn/wmpmeta)](https://github.com/savaughn/wmpmeta/releases/latest)
 [![downloads](https://img.shields.io/github/downloads/savaughn/wmpmeta/total)](https://github.com/savaughn/wmpmeta/releases)
-[![license](https://img.shields.io/github/license/savaughn/wmpmeta)](LICENSE)
+[![license: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-Windows%202000%20%7C%20WMP%209-0066cc)](#requirements)
 
 ## Screenshots
