@@ -427,8 +427,20 @@ char *radio_page(const char *tag, const char *query, const char *sort)
  * mojibake and entities like &amp; are shown as typed. So convert to the
  * system code page and only swap out the characters that would break the
  * markup. */
-static void asx_text(buf_t *b, const char *s)
+static void asx_text(buf_t *b, const char *raw)
 {
+    buf_t f = {0};  /* fold U+2010 and friends first; cp1252 has no hyphen */
+    for (const char *p = raw; *p; p++) {
+        const char *rep;
+        int k = w2k_fold(p, &rep);
+        if (k) {
+            buf_puts(&f, rep);
+            p += k - 1;
+        } else {
+            buf_add(&f, p, 1);
+        }
+    }
+    const char *s = buf_cstr(&f);
     int wn = MultiByteToWideChar(CP_UTF8, 0, s, -1, NULL, 0);
     char *a = NULL;
     if (wn > 0) {
@@ -444,6 +456,7 @@ static void asx_text(buf_t *b, const char *s)
     for (const char *p = a ? a : s; *p; p++)
         buf_add(b, *p == '<' ? "(" : *p == '>' ? ")" : *p == '"' ? "'" : p, 1);
     free(a);
+    buf_free(&f);
 }
 
 char *radio_asx(const char *id)

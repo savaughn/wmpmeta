@@ -370,9 +370,43 @@ static int by_date(const void *a, const void *b)
 
 /* ---------------------------------------------------------------- HTML */
 
+/* Windows 2000's fonts only cover WGL4, so a few characters MusicBrainz and
+ * the feeds like to use show up as boxes: U+2010 HYPHEN ("Re-Hash"), U+2011
+ * non-breaking hyphen, U+2012 figure dash ("19-2000"), U+2212 minus, and the
+ * typographic spaces. At s (UTF-8), returns how many bytes to skip and sets
+ * *rep to the stand-in, or returns 0 when the character is fine as it is. */
+int w2k_fold(const char *s, const char **rep)
+{
+    const unsigned char *u = (const unsigned char *)s;
+    if (u[0] == 0xE2 && u[1] == 0x80 && u[2] >= 0x90 && u[2] <= 0x92) {
+        *rep = "-";
+        return 3;
+    }
+    if (u[0] == 0xE2 && u[1] == 0x88 && u[2] == 0x92) {
+        *rep = "-";
+        return 3;
+    }
+    if (u[0] == 0xE2 && u[1] == 0x80 && ((u[2] >= 0x80 && u[2] <= 0x8A) || u[2] == 0xAF)) {
+        *rep = " ";
+        return 3;
+    }
+    if (u[0] == 0xE2 && u[1] == 0x80 && u[2] == 0x8B) {  /* zero-width space */
+        *rep = "";
+        return 3;
+    }
+    return 0;
+}
+
 static void esc(buf_t *b, const char *s)
 {
     for (; s && *s; s++) {
+        const char *rep;
+        int k = w2k_fold(s, &rep);
+        if (k) {
+            buf_puts(b, rep);
+            s += k - 1;
+            continue;
+        }
         switch (*s) {
         case '&': buf_puts(b, "&amp;"); break;
         case '<': buf_puts(b, "&lt;"); break;
