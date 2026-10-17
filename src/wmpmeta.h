@@ -6,7 +6,7 @@
 
 #include "tlsnet.h"
 
-#define WM_VERSION "1.0.0"
+#define WM_VERSION "1.0.1"
 #define WM_URL     "https://github.com/savaughn/wmpmeta"
 
 /* ---- fetch.c: HTTPS GET with redirects ---- */
@@ -55,6 +55,7 @@ int   guide_image(const char *url, fetch_t *r);  /* 0 and an image, or -1 */
 int   guide_static(const char *name, const unsigned char **data, size_t *len);
 /* Shared by the generated pages. */
 void  html_esc(buf_t *b, const char *s);
+int   w2k_fold(const char *s, const char **rep);  /* chars Win2k fonts lack */
 void  html_page_start(buf_t *h, const char *title, const char *w1, const char *w2,
                       const char *extra_css);
 

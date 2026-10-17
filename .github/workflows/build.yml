@@ -1,0 +1,41 @@
+# Builds wmpmeta.exe, the zip and setup.exe on every pull request to main
+# and every merge to main, and keeps them as a workflow artifact.
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install MinGW-w64 (i686) and NSIS
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends gcc-mingw-w64-i686 nsis zip
+
+      - name: Build
+        run: make -j"$(nproc)"
+
+      # The real Windows 2000 DLLs can't live in the repo; w2k_exports.txt
+      # lists their export names (made with check_imports.py --list).
+      - name: Check imports against Windows 2000
+        run: make check W2K_SYSDIR=tools/w2k_exports.txt
+
+      - name: Package
+        run: make dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wmpmeta-${{ github.sha }}
+          path: dist/*
+          if-no-files-found: error

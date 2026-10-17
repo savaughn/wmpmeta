@@ -144,6 +144,13 @@ static void credit(const cJSON *o, buf_t *b)
 static void xml_esc(buf_t *b, const char *s)
 {
     for (; *s; s++) {
+        const char *rep;
+        int k = w2k_fold(s, &rep);  /* WMP's fonts lack U+2010 and friends */
+        if (k) {
+            buf_puts(b, rep);
+            s += k - 1;
+            continue;
+        }
         switch (*s) {
         case '&': buf_puts(b, "&amp;"); break;
         case '<': buf_puts(b, "&lt;"); break;
