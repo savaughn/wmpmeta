@@ -107,7 +107,9 @@ The setup.exe needs NSIS 3. The official Windows `makensis.exe` works under Wine
 make dist MAKENSIS="wine64 /path/to/nsis-3.10/makensis.exe" NSIS_DRIVE=Z:
 ```
 
-`make check` confirms that every function the exe imports exists in the real Windows 2000 SP4 system DLLs, and that the PE header says OS version 5.0. Newer MinGW runtimes pull in XP-only functions unless they're replaced, and `src/compat.c` provides those.
+`make check` confirms that every function the exe imports exists in the real Windows 2000 SP4 system DLLs, and that the PE header says OS version 5.0. Newer MinGW runtimes pull in XP-only functions unless they're replaced, and `src/compat.c` provides those. Without the DLLs, `make check W2K_SYSDIR=tools/w2k_exports.txt` checks against a list of their export names instead.
+
+GitHub Actions builds every pull request and every merge to `main` on Ubuntu (MinGW-w64 and NSIS from apt), runs that check, and keeps the zip and setup.exe as a workflow artifact.
 
 The TLS code in `src/tls.c`, `src/util.c` and `src/compat.c` comes from tlsproxy, a TLS 1.2 proxy for Windows 2000. Mbed TLS uses CryptGenRandom for entropy and `gethostbyname` for name lookup, because Windows 2000 has no `getaddrinfo`.
 

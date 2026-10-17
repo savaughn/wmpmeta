@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Verify a PE32 executable only imports functions that exist on Windows 2000.
 
-    check_imports.py <exe> <win2k-system32-dir>
+    check_imports.py <exe> <win2k-system32-dir | exports-list.txt>
+    check_imports.py --list <win2k-system32-dir> <dll>... > exports-list.txt
 
 The system32 directory must hold real Windows 2000 DLLs (kernel32.dll,
-msvcrt.dll, ...). Every DLL the exe imports must be present there, and every
+msvcrt.dll, ...). Where those can't be shipped (CI), a text file of
+"dll name" lines made with --list from the real DLLs stands in for them. Every DLL the exe imports must be present there, and every
 imported name must be in that DLL's export table (forwarders count). The
 exe's OS and subsystem version fields must also be 5.0 or lower, because the
 Win2k loader refuses anything newer.
@@ -83,10 +85,38 @@ class PE:
         return out
 
 
+class ExportList:
+    """Exports read from a --list file instead of the DLLs themselves."""
+
+    def __init__(self, path):
+        self.by_dll = {}
+        with open(path) as f:
+            for line in f:
+                if line.strip() and not line.startswith("#"):
+                    dll, name = line.split()
+                    self.by_dll.setdefault(dll.lower(), set()).add(name)
+
+    def exports(self, dll):
+        return self.by_dll.get(dll), set()
+
+
+def list_exports(sysdir, dlls):
+    print("# Exports of the Windows 2000 SP4 DLLs wmpmeta imports from, made with")
+    print("# tools/check_imports.py --list. Names only; used by CI's import check.")
+    for dll in dlls:
+        names, _ = PE(os.path.join(sysdir, dll)).exports()
+        for n in sorted(names):
+            print(f"{dll.lower()} {n}")
+
+
 def main():
+    if len(sys.argv) >= 4 and sys.argv[1] == "--list":
+        list_exports(sys.argv[2], sys.argv[3:])
+        return
     if len(sys.argv) != 3:
         sys.exit(__doc__)
     exe, sysdir = sys.argv[1], sys.argv[2]
+    listed = ExportList(sysdir) if os.path.isfile(sysdir) else None
     pe = PE(exe)
     errors = []
     if pe.machine != 0x14C:
@@ -97,11 +127,17 @@ def main():
 
     total = 0
     for dll, syms in sorted(pe.imports().items()):
-        path = os.path.join(sysdir, dll)
-        if not os.path.exists(path):
-            errors.append(f"{dll}: not present in {sysdir}")
-            continue
-        names, ords = PE(path).exports()
+        if listed:
+            names, ords = listed.exports(dll)
+            if names is None:
+                errors.append(f"{dll}: not in {sysdir}")
+                continue
+        else:
+            path = os.path.join(sysdir, dll)
+            if not os.path.exists(path):
+                errors.append(f"{dll}: not present in {sysdir}")
+                continue
+            names, ords = PE(path).exports()
         for s in syms:
             total += 1
             ok = int(s[1:]) in ords if s.startswith("#") else s in names

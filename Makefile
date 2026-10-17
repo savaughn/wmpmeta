@@ -3,7 +3,8 @@
 #
 #   make        build/wmpmeta.exe
 #   make check  verify every import exists in Windows 2000's system DLLs
-#               (needs real Win2k SP4 DLLs: make check W2K_SYSDIR=path)
+#               (real Win2k SP4 DLLs: make check W2K_SYSDIR=path, or their
+#               export names: make check W2K_SYSDIR=tools/w2k_exports.txt)
 #   make dist   dist/wmpmeta-<version>.zip (portable) and
 #               dist/wmpmeta-<version>-setup.exe (needs makensis)
 
