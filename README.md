@@ -4,6 +4,33 @@ Brings back CD album and track names in Windows Media Player 9 on Windows 2000, 
 
 Microsoft shut down the metadata service WMP uses, so every audio CD now shows up as "Unknown Artist" with tracks named "Track 1", "Track 2" and so on. wmpmeta is a small program that runs on the same PC and answers WMP's lookups itself. It is a single 700 KB exe with its own TLS 1.2 stack and root certificates, so it doesn't need a runtime or a modern machine on the network.
 
+<!-- web -->
+[![build](https://github.com/savaughn/wmpmeta/actions/workflows/build.yml/badge.svg)](https://github.com/savaughn/wmpmeta/actions/workflows/build.yml)
+[![release](https://img.shields.io/github/v/release/savaughn/wmpmeta)](https://github.com/savaughn/wmpmeta/releases/latest)
+[![downloads](https://img.shields.io/github/downloads/savaughn/wmpmeta/total)](https://github.com/savaughn/wmpmeta/releases)
+[![license](https://img.shields.io/github/license/savaughn/wmpmeta)](LICENSE)
+[![platform](https://img.shields.io/badge/platform-Windows%202000%20%7C%20WMP%209-0066cc)](#requirements)
+
+## Screenshots
+
+All taken in Windows Media Player 9 on Windows 2000.
+
+<table>
+<tr>
+<td width="50%"><a href="docs/screenshots/copy-from-cd.png"><img src="docs/screenshots/copy-from-cd.png" alt="Copy from CD with track names from MusicBrainz"></a><br><b>Copy from CD:</b> album, artist and track names from MusicBrainz</td>
+<td width="50%"><a href="docs/screenshots/view-album-info.png"><img src="docs/screenshots/view-album-info.png" alt="View Album Info for a CD"></a><br><b>View Album Info:</b> cover art, release details and track list</td>
+</tr>
+<tr>
+<td><a href="docs/screenshots/album-info.png"><img src="docs/screenshots/album-info.png" alt="Media Library with the album info pane"></a><br><b>Media Library:</b> the album info pane for a ripped album</td>
+<td><a href="docs/screenshots/media-guide.png"><img src="docs/screenshots/media-guide.png" alt="Media Guide with music news"></a><br><b>Media Guide:</b> music news and album reviews</td>
+</tr>
+<tr>
+<td><a href="docs/screenshots/radio-tuner.png"><img src="docs/screenshots/radio-tuner.png" alt="Radio Tuner listing stations by country"></a><br><b>Radio Tuner:</b> internet radio by genre, search or country</td>
+<td><a href="docs/screenshots/skin-gallery.png"><img src="docs/screenshots/skin-gallery.png" alt="The skin gallery opened from More Skins"></a><br><b>More Skins:</b> the WMP9 skin gallery, rebuilt</td>
+</tr>
+</table>
+<!-- /web -->
+
 ## Install
 
 Download `wmpmeta-<version>-setup.exe` from Releases and run it as an Administrator. Then close Windows Media Player, open it again, and insert a CD.
