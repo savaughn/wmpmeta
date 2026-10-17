@@ -225,7 +225,6 @@ int skins_fetch_all(void)
 }
 
 static const char css[] =
-    ".pad{padding:8px 10px}"
     ".intro{font-size:11px;color:#333;padding:8px 10px 0 10px}"
     ".sn{font-size:11px;font-weight:bold;color:#000099}"
     ".sk{color:#666}"
@@ -306,7 +305,10 @@ char *skins_page(int kind)
                      "skin mode. These are the skins from Microsoft's Windows Media Player 9 Series "
                      "skin gallery.</div>");
     }
-    buf_puts(&h, "<div class=pad><table width=\"100%\" cellpadding=0 cellspacing=0 border=0>");
+    /* Spacer columns, not a padded div: IE's quirks mode ignores the padding
+     * when sizing a width=100% table, so the gallery overflowed the window. */
+    buf_puts(&h, "<table width=\"100%\" cellpadding=0 cellspacing=0 border=0><tr><td width=10></td>"
+                 "<td><table width=\"100%\" cellpadding=0 cellspacing=0 border=0>");
     /* Two per row; a new section heading (plug-ins) starts a new row. */
     for (int i = 0; i < g->n;) {
         const char *sec = g->list[i].section;
@@ -327,7 +329,7 @@ char *skins_page(int kind)
         }
         buf_puts(&h, "</tr>");
     }
-    buf_puts(&h, "</table></div><div class=foot>List and previews from the Internet Archive's "
+    buf_puts(&h, "</table></td><td width=10></td></tr></table><div class=foot>List and previews from the Internet Archive's "
                  "copies of the Windows Media Player galleries. Downloads come from "
                  "download.microsoft.com or the Internet Archive the first time and are then "
                  "kept on this computer. Served by wmpmeta " WM_VERSION ".</div></body></html>");
