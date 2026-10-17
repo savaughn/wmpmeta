@@ -6,7 +6,7 @@
 
 #include "tlsnet.h"
 
-#define WM_VERSION "1.0.1"
+#define WM_VERSION "1.0.2"
 #define WM_URL     "https://github.com/savaughn/wmpmeta"
 
 /* ---- fetch.c: HTTPS GET with redirects ---- */
