@@ -1,0 +1,24 @@
+wmpmeta includes the following third-party software and data.
+
+Mbed TLS 3.4.1 (Espressif ESP-IDF distribution, commit 727a037da)
+  https://github.com/Mbed-TLS/mbedtls
+  Licensed under the Apache License, Version 2.0; see
+  third_party/mbedtls/LICENSE (LICENSE-mbedtls.txt in the release zip).
+
+cJSON
+  https://github.com/DaveGamble/cJSON
+  Licensed under the MIT License; see third_party/cjson/LICENSE
+  (LICENSE-cjson.txt in the release zip).
+
+Root CA certificates (certs/roots.pem, compiled into wmpmeta.exe)
+  The Mozilla CA certificate bundle, distributed under the Mozilla Public
+  License 2.0: https://www.mozilla.org/MPL/2.0/
+  Source: https://curl.se/docs/caextract.html
+
+Album and track data is fetched at run time from MusicBrainz
+(https://musicbrainz.org), whose core data is released under CC0. Cover art
+is fetched from the Cover Art Archive (https://coverartarchive.org); the
+images belong to their respective rights holders.
+
+Windows and Windows Media are trademarks of Microsoft Corporation. wmpmeta
+is not affiliated with or endorsed by Microsoft.
