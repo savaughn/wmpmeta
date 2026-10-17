@@ -17,7 +17,10 @@
 #include "cJSON.h"
 
 static const char css[] =
-    ".pad{padding:8px}"
+    /* The body goes in a spacer-column table, not a padded div: IE's quirks
+     * mode sizes a width=100% table to the whole pane and ignores the div's
+     * padding, so the track list overflowed and lost its Length column. */
+    ".body{padding-top:8px;padding-bottom:8px}"
     ".at{font-family:Trebuchet MS,Verdana,sans-serif;font-size:16px;font-weight:bold;color:#000099}"
     ".aa{font-size:12px;font-weight:bold;color:#333}"
     ".k{color:#666}"
@@ -140,7 +143,7 @@ char *album_view(const char *rawtoc, const char *wmid, const char *use)
     buf_t h = {0};
 
     html_page_start(&h, "Album Information", "Album", "Info", css);
-    buf_puts(&h, "<div class=bar>Album Information</div><div class=pad>");
+    buf_puts(&h, "<div class=bar>Album Information</div><table width=\"100%\" cellpadding=0 cellspacing=0 border=0><tr><td width=8></td><td class=body>");
     if (use && *use && !chosen)
         buf_puts(&h, "<p class=msg>MusicBrainz didn't answer, so the album wasn't changed. "
                      "Try again in a moment.</p>");
@@ -254,7 +257,7 @@ char *album_view(const char *rawtoc, const char *wmid, const char *use)
         buf_puts(&h, "</table>");
         cJSON_Delete(rel);
     }
-    buf_puts(&h, "</div><div class=foot>Album information from MusicBrainz.org, "
+    buf_puts(&h, "</td><td width=8></td></tr></table><div class=foot>Album information from MusicBrainz.org, "
                  "served by wmpmeta " WM_VERSION ".</div></body></html>");
     free(toc);
     return buf_cstr(&h);
@@ -396,7 +399,7 @@ char *album_find(const char *rawtoc, const char *wmid, const char *artist, const
 
     buf_t h = {0};
     html_page_start(&h, "Find Album Information", "Album", "Info", css);
-    buf_puts(&h, "<div class=bar>Find Album Information</div><div class=pad>");
+    buf_puts(&h, "<div class=bar>Find Album Information</div><table width=\"100%\" cellpadding=0 cellspacing=0 border=0><tr><td width=8></td><td class=body>");
     buf_printf(&h, "<form method=get action=\"/redir/submittoc.asp\" style=\"margin:0\">"
                    "<input type=hidden name=cd value=\"%s\"><input type=hidden name=wmid value=\"%s\">"
                    "<table cellpadding=2 cellspacing=0 border=0><tr>"
@@ -450,7 +453,7 @@ char *album_find(const char *rawtoc, const char *wmid, const char *artist, const
         toc_q(&h, toc);
         buf_printf(&h, "&wmid=%s\">Back to Album Info</a></p>", cur);
     }
-    buf_puts(&h, "</div><div class=foot>Album information from MusicBrainz.org. "
+    buf_puts(&h, "</td><td width=8></td></tr></table><div class=foot>Album information from MusicBrainz.org. "
                  "Missing your CD? Add it at musicbrainz.org.</div></body></html>");
     cJSON_Delete(rels);
     free(toc);
